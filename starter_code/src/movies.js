@@ -1,11 +1,25 @@
 /* eslint no-restricted-globals: 'off' */
 // Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(mins) {
-  minutes = mins.map(function(el) {
-    el;
+function turnHoursToMinutes(movies) {
+  return movies.map(function(movie) {
+    let h = 0;
+    let min = 0;
+
+    if (movie.duration.includes("h")) {
+      h = movie.duration.slice(0, movie.duration.indexOf("h"));
+    }
+    if (movie.duration.includes("min")) {
+      min = movie.duration.substring(
+        movie.duration.length - 5,
+        movie.duration.length - 3
+      );
+    }
+    const duration = parseInt(h, 10) * 60 + parseInt(min, 10);
+    const newMovie = Object.assign({}, movie, { duration });
+    return newMovie;
   });
-  return minutes;
 }
+
 // Get the average of all rates with 2 decimals
 
 function ratesAverage(myArray) {
@@ -36,29 +50,40 @@ function dramaMoviesRate(myArray) {
 // Order by time duration, in growing order
 
 function orderByDuration(myArray) {
-  //var order =
-  var timeOrder = myArray.sort(function(timeA, timeB) {
-    timeA.duration - timeB.duration;
+  var timeOrder = myArray.sort(function(a, b) {
+    if (a.duration === b.duration) {
+      return a.title.localeCompare(b.title);
+    }
+    return a.duration - b.duration;
   });
+
   return timeOrder;
 }
 // How many movies did STEVEN SPIELBERG
 
 function howManyMovies(myArray) {
+  if (myArray.length === 0) {
+    return undefined;
+  }
   var steve = myArray.filter(function(el) {
-    el.director.indexOf("Steven Spielberg") >= 0;
+    return (
+      el.director.indexOf("Steven Spielberg") >= 0 &&
+      el.genre.indexOf("Drama") >= 0
+    );
   });
-
-  return "Steven Spielberg directed 0 drama movies!";
+  return `Steven Spielberg directed ${steve.length} drama movies!`;
 }
 
 // Order by title and print the first 20 titles
 function orderAlphabetically(title) {
   var titleSort = title.sort(function(a, b) {
-    return a.title[0] - b.title[0];
+    return a.title.localeCompare(b.title);
   });
-
-  return titleSort;
+  return titleSort
+    .map(function(movie) {
+      return movie.title;
+    })
+    .slice(0, 20);
 }
 // Best yearly rate average
 
