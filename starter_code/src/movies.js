@@ -87,4 +87,27 @@ function orderAlphabetically(title) {
 }
 // Best yearly rate average
 
-function bestYearAvg() {}
+function bestYearAvg(average) {
+  const ratingsPerYear = average.reduce(function(acc, curr) {
+    if (acc[curr.year] === undefined) {
+      acc[curr.year] = [curr.rate];
+    } else {
+      acc[curr.year].push(curr.rate);
+    }
+    return acc;
+  }, {});
+
+  const avgRatings = Object.entries(ratingsPerYear).map(([year, ratings]) => [
+    year,
+    ratings.reduce((acc, curr) => acc + parseFloat(curr, 10), 0) /
+      ratings.length
+  ]);
+
+  avgRatings.sort(([_yearA, a], [_yearB, b]) => b - a);
+
+  const [bestYear, bestRating] = avgRatings[0] || [];
+
+  if (bestYear) {
+    return `The best year was ${bestYear} with an average rate of ${bestRating}`;
+  }
+}
